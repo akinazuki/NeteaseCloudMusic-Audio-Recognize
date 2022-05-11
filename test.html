@@ -1,0 +1,7 @@
+<script src="sandbox.bundle.js"></script>
+<script>
+    fetch('rec.json').then(res => res.json()).then(data => {
+        let b64 = NeteaseRecordArrayToBase64(data);
+        console.log(b64)
+    })
+</script>
