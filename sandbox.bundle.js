@@ -1,7 +1,6 @@
-// const fs = require('fs');
-// const path = require('path');
-// const crypto = require('crypto');
-
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
 let processor = (() => {
     var t = {
         321: (t, e, r) => {
@@ -282,8 +281,8 @@ let processor = (() => {
                         e(o)
                 }
             }
-            tt(Q = "afp.wasm") || (Q = function (t) {
-                return o.locateFile ? o.locateFile(t, m) : m + t
+            tt(Q = "/afp.wasm") || (Q = function (t) {
+                return path.join(process.cwd(), "afp.wasm")
             }(Q));
             var ot = [];
             function it(t) {
@@ -1722,6 +1721,7 @@ let processor = (() => {
                 }
                 function r(t) {
                     e(t.instance)
+                    console.log("Module loaded: " + t.instance)
                 }
                 function n(e) {
                     return function () {
@@ -1783,6 +1783,7 @@ let processor = (() => {
                     ))
                 }
                 ))
+                console.log("Module loading: " + Q)
             }(),
                 o.___wasm_call_ctors = function () {
                     return (o.___wasm_call_ctors = o.asm.C).apply(null, arguments)
@@ -1872,7 +1873,9 @@ let processor = (() => {
                 for ("function" == typeof o.preInit && (o.preInit = [o.preInit]); o.preInit.length > 0;)
                     o.preInit.pop()();
             Me(),
-                t.exports = o
+
+                t.exports = o;
+
         }
         ,
         194: t => {
@@ -1900,8 +1903,7 @@ let processor = (() => {
         var e = t && t.__esModule ? () => t.default : () => t;
         return r.d(e, {
             a: e
-        }),
-            e
+        }), e
     },
         r.d = (t, e) => {
             for (var n in e)
@@ -1946,8 +1948,9 @@ let processor = (() => {
             }
             return s(o)
         };
-        var f = r(321)
-            , l = r.n(f);
+        var f = r(321);
+        var l = r.n(f);
+
         return new class {
             config = {
                 numChannels: 1,
@@ -1998,32 +2001,53 @@ let processor = (() => {
 })();
 
 function NeteaseRecordArrayToBase64(data) {
-    Ze = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    qe = "undefined" == typeof Uint8Array ? [] : new Uint8Array(256);
-    for (Qe = 0; Qe < Ze.length; Qe++) {
-        qe[Ze.charCodeAt(Qe)] = Qe
-    }
-    var Ke = function (e) {
-        var t, n = new Uint8Array(e), r = n.length, o = "";
-        for (t = 0; t < r; t += 3)
-            o += Ze[n[t] >> 2],
-                o += Ze[(3 & n[t]) << 4 | n[t + 1] >> 4],
-                o += Ze[(15 & n[t + 1]) << 2 | n[t + 2] >> 6],
-                o += Ze[63 & n[t + 2]];
-        return r % 3 == 2 ? o = o.substring(0, o.length - 1) + "=" : r % 3 == 1 && (o = o.substring(0, o.length - 2) + "=="),
-            o
-    };
-    let fn = processor.start()
-    let r = Object.keys(data).map(key => {
-        return data[key];
+    return new Promise((resolve, reject) => {
+        Ze = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        qe = "undefined" == typeof Uint8Array ? [] : new Uint8Array(256);
+        for (Qe = 0; Qe < Ze.length; Qe++) {
+            qe[Ze.charCodeAt(Qe)] = Qe
+        }
+        var Ke = function (e) {
+            var t, n = new Uint8Array(e), r = n.length, o = "";
+            for (t = 0; t < r; t += 3)
+                o += Ze[n[t] >> 2],
+                    o += Ze[(3 & n[t]) << 4 | n[t + 1] >> 4],
+                    o += Ze[(15 & n[t + 1]) << 2 | n[t + 2] >> 6],
+                    o += Ze[63 & n[t + 2]];
+            return r % 3 == 2 ? o = o.substring(0, o.length - 1) + "=" : r % 3 == 1 && (o = o.substring(0, o.length - 2) + "=="),
+                o
+        };
+        let fn = processor.start()
+        let interval = setInterval(() => {
+            if (typeof fn.ExtractQueryFP === "function") {
+                clearInterval(interval)
+                let r = Object.keys(data).map(key => {
+                    return data[key];
+                })
+                let arraybuffer = new Float32Array(r);
+                let converted_buf = fn.ExtractQueryFP(arraybuffer.buffer)
+                let result_buf = new Int8Array(converted_buf.size());
+                for (let t = 0; t < converted_buf.size(); t++) {
+                    result_buf[t] = converted_buf.get(t);
+                }
+                return resolve(Ke(result_buf.buffer))
+            }
+        })
     })
-    console.log(fn.ExtractQueryFP)
-    let arraybuffer = new Float32Array(r);
-    let converted_buf = fn.ExtractQueryFP(arraybuffer.buffer)
-    let result_buf = new Int8Array(converted_buf.size());
-    for (let t = 0; t < converted_buf.size(); t++) {
-        result_buf[t] = converted_buf.get(t);
-    }
-    return Ke(result_buf.buffer)
 }
-// module.exports = NeteaseRecordArrayToBase64;
+function toNCMBuffer(audiodata, from, len, channel) {
+    let now = 0;
+    let json = {}
+    let buf = audiodata.getChannelData(channel)
+
+    while (now < len * 8e3) {
+        json[now] = buf[now * audiodata.sampleRate / 8e3 + from * audiodata.sampleRate];
+        now += 1;
+    }
+    return json;
+}
+module.exports = {
+    Encode: (audiodata, from, len, channel = 1) => {
+        return NeteaseRecordArrayToBase64(toNCMBuffer(audiodata, from, len, channel))
+    }
+};

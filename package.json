@@ -1,0 +1,25 @@
+{
+  "name": "ncm-audio-recgnize",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test.ts",
+  "scripts": {
+    "test": "tsx test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akinazuki/NeteaseCloudMusic-Audio-Recgonize.git"
+  },
+  "author": "Aki Nazuki",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/akinazuki/NeteaseCloudMusic-Audio-Recgonize/issues"
+  },
+  "homepage": "https://github.com/akinazuki/NeteaseCloudMusic-Audio-Recgonize#readme",
+  "dependencies": {
+    "web-audio-api": "github:audiojs/web-audio-api"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0"
+  }
+}
