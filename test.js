@@ -39,9 +39,10 @@ const axios = require('axios');
         data: querydata
     }).then(function (response) {
         if (!response.data.data?.result) {
-            console.log(`No result`)
+            console.log(`No result, please try again`)
             return;
         }
+        console.log(`Matched result count: ${response.data.data.result.length}`)
         response.data.data?.result.forEach((item, index) => {
             console.log(`[${index + 1}] ${item.song.name} - ${item.song.artists.map(artist => artist.name).join('/')} Album: 「${item.song.album.name}」 CID: [${item.song.id}]`)
         })

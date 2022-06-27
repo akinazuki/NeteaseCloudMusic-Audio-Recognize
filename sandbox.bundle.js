@@ -2030,6 +2030,10 @@ function NeteaseRecordArrayToBase64(data) {
                 for (let t = 0; t < converted_buf.size(); t++) {
                     result_buf[t] = converted_buf.get(t);
                 }
+                let bufLen = result_buf.buffer.byteLength;
+                if (bufLen <= 64) {
+                    return reject(`Buffer length(${bufLen}) is too short`)
+                }
                 return resolve(Ke(result_buf.buffer))
             }
         })
@@ -2038,8 +2042,10 @@ function NeteaseRecordArrayToBase64(data) {
 function toNCMBuffer(audiodata, from, len, channel) {
     let now = 0;
     let json = {}
+    if (audiodata.sampleRate !== 48000) {
+        throw new Error("sampleRate is not 48000Hz")
+    }
     let buf = audiodata.getChannelData(channel)
-
     while (now < len * 8e3) {
         json[now] = buf[now * audiodata.sampleRate / 8e3 + from * audiodata.sampleRate];
         now += 1;
@@ -2047,7 +2053,7 @@ function toNCMBuffer(audiodata, from, len, channel) {
     return json;
 }
 module.exports = {
-    Encode: (audiodata, from, len, channel = 1) => {
+    Encode: (audiodata, from, len, channel = 0) => {
         return NeteaseRecordArrayToBase64(toNCMBuffer(audiodata, from, len, channel))
     }
 };
