@@ -1,10 +1,11 @@
 {
-  "name": "ncm-audio-recgnize",
+  "name": "ncm-audio-recognize",
   "version": "1.0.0",
   "description": "",
   "main": "test.ts",
   "scripts": {
-    "test": "tsx test.ts"
+    "test-ts": "tsx test.ts",
+    "test-js": "node test.js"
   },
   "repository": {
     "type": "git",
@@ -16,10 +17,13 @@
     "url": "https://github.com/akinazuki/NeteaseCloudMusic-Audio-Recgonize/issues"
   },
   "homepage": "https://github.com/akinazuki/NeteaseCloudMusic-Audio-Recgonize#readme",
-  "dependencies": {
-    "web-audio-api": "github:audiojs/web-audio-api"
-  },
   "devDependencies": {
     "@types/node": "^18.0.0"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "tsx": "^3.6.0",
+    "web-audio-api": "github:audiojs/web-audio-api",
+    "web-audio-api-cjs": "^0.2.4"
   }
 }

@@ -1,14 +1,13 @@
-import NeteaseUtils from './sandbox.bundle';
-import { AudioContext } from 'web-audio-api'
-import fs from 'fs';
-import * as process from 'process';
-import axios from 'axios';
+const NeteaseUtils = require('./sandbox.bundle')
+const fs = require('fs');
+const { AudioContext } = require('web-audio-api-cjs');
+const axios = require('axios');
 (async () => {
     let songdata = fs.readFileSync(process.argv[2])
     const audioCtx = new AudioContext();
     let data = await audioCtx.decodeAudioData(songdata)
     console.log(`Audio Channel Count: ${data.numberOfChannels}`)
-    let encoded = await NeteaseUtils.Encode(data, 4, 6, 1)
+    let encoded = await NeteaseUtils.Encode(data, 4, 6, 0)
     console.log(`Encoded Data: `, encoded)
 
     const querydata = new URLSearchParams({
