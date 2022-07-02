@@ -1772,17 +1772,14 @@ let processor = (() => {
                         return g("Module.instantiateWasm callback failed with error: " + t),
                             !1
                     }
-                w || "function" != typeof WebAssembly.instantiateStreaming || tt(Q) || et(Q) || "function" != typeof fetch ? n(r) : fetch(Q, {
-                    credentials: "same-origin"
-                }).then((function (e) {
-                    return WebAssembly.instantiateStreaming(e, t).then(r, (function (t) {
+                w || "function" != typeof WebAssembly.instantiate || tt(Q) || et(Q) || "function" != typeof fetch ? n(r) : fs.readFile(Q,function (e) {
+                    return WebAssembly.instantiate(e, t).then(r, (function (t) {
                         return g("wasm streaming compile failed: " + t),
                             g("falling back to ArrayBuffer instantiation"),
                             n(r)
                     }
                     ))
-                }
-                ))
+                })
                 console.log("Module loading: " + Q)
             }(),
                 o.___wasm_call_ctors = function () {
