@@ -2,41 +2,62 @@
 
 ## Usage
 
-```
-$ npm i
-$ npm run test-ts samples/Komplexe.mp3
-
-> ncm-audio-recognize@1.0.0 test
-> tsx test.ts "samples/Komplexe.mp3"
-
+```shell
+$ npm install ncm-audio-recognize
+$ node test.js samples/Komplexe.mp3
 Module loading: /Users/natsuki/workspace/ncm-audio-recognize/afp.wasm
 Module loaded: [object WebAssembly.Instance]
 Encoded Data:  W5/Hd3yYCY2E....
 [1] Komplexe - 雄之助 Album: 「maimai でらっくす ベストアルバムちほー」 CID: [1914659931]
 ```
 
-## Usage (with CommonJS)
+## Example Code
+```javascript
+import ncmutils from 'ncm-audio-recognize'
+import fs from 'fs'
 
-> We refactor the `web-audio-api` project to use CommonJS
-> The CommonJS module name is `web-audio-api-cjs`
-
-Try it with command:
-
+const buffer = fs.readFileSync("./takenohana.mp3")
+const encoded = await ncmutils.encode(buffer)
+const result = await ncmutils.recognize(encoded)
+console.log(`Matched result count: ${result.length}`)
+result.forEach((item, index) => {
+    console.log(`[${index + 1}] ${item.song.name} - ${item.song.artists.map(artist => artist.name).join('/')} Album: 「${item.song.album.name}」 CID: [${item.song.id}]`)
+})
 ```
-npm run test-js samples/Komplexe.mp3
-```
+
 
 ## Documentation
 
-```NeteaseUtils.Encode(audiodata, from, len, channel)```
+### ```encode(fileBuffer)```
 
 Params| Type |Description|
 |-------|-------|-------|
-```audiodata``` | `AudioBuffer` | The audio data. 
+```fileBuffer``` | `Buffer` | The audio file data.
+
+Returns: `string` The encoded data.
+
+---
+
+### ```recognize(encodedData)```
+
+Params| Type |Description|
+|-------|-------|-------|
+```encodedData``` | `string` | The encoded data.
+
+Returns: `Array` The matched result.
+
+---
+
+### ```rawEncode(audiodata, from, len, channel)```
+
+Params| Type |Description|
+|-------|-------|-------|
+```audioContextData``` | `AudioBuffer` | The audio data. 
 ```from``` | `number` | The time when the audio data started
 ```len``` | `number` | The secs of the audio data.
 ```channel``` | `number` | The channel of the audio data.
 
+Returns: `string` The encoded data.
 
 ## Credits
 

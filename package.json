@@ -1,12 +1,15 @@
 {
   "name": "ncm-audio-recognize",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
-  "main": "test.ts",
-  "scripts": {
-    "test-ts": "tsx test.ts",
-    "test-js": "node test.js"
-  },
+  "main": "lib.js",
+  "type": "module",
+  "exports": "./src/lib.js",
+  "types": "src/lib.d.ts",
+  "files": [
+    "lib.js",
+    "src"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/akinazuki/NeteaseCloudMusic-Audio-Recgonize.git"
