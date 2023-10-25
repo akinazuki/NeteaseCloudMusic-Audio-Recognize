@@ -1,6 +1,6 @@
 {
   "name": "ncm-audio-recognize",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "",
   "main": "lib.js",
   "type": "module",
@@ -24,8 +24,6 @@
     "@types/node": "^18.0.0"
   },
   "dependencies": {
-    "axios": "^0.27.2",
-    "tsx": "^3.6.0",
     "web-audio-api": "github:audiojs/web-audio-api",
     "web-audio-api-cjs": "^0.2.4"
   }
