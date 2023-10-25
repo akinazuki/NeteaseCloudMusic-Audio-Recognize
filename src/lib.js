@@ -40,5 +40,6 @@ export async function recognize(encoded) {
 
 export default {
   encode,
-  recognize
+  recognize,
+  rawEncode
 }
