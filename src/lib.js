@@ -12,6 +12,31 @@ export async function encode(songdata) {
 export async function rawEncode(audioContextData, from, len, channel) {
   return NeteaseUtils.Encode(audioContextData, from, len, channel)
 }
+
+export async function lyrics(cid) {
+  const urlencoded = new URLSearchParams();
+  urlencoded.append("id", cid);
+  urlencoded.append("tv", "-1");
+  urlencoded.append("lv", "-1");
+  urlencoded.append("rv", "-1");
+  urlencoded.append("kv", "-1");
+
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      'accept': '*/*',
+      'accept-language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
+      'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'origin': 'chrome-extension://pgphbbekcgpfaekhcbjamjjkegcclhhd',
+      'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
+    },
+    body: urlencoded,
+    redirect: "follow"
+  };
+
+  return fetch("https://interface.music.163.com/api/song/lyric", requestOptions)
+    .then((response) => response.json())
+}
 export async function recognize(encoded) {
   const querydata = new URLSearchParams({
     'sessionId': '441df692-afea-4a54-8aff-f5f20fd34f12',
@@ -41,5 +66,6 @@ export async function recognize(encoded) {
 export default {
   encode,
   recognize,
+  lyrics,
   rawEncode
 }
