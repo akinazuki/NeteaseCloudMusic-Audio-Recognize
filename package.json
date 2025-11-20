@@ -21,8 +21,7 @@
   },
   "homepage": "https://github.com/akinazuki/NeteaseCloudMusic-Audio-Recgonize#readme",
   "devDependencies": {
-    "@types/node": "^18.0.0",
-    "terser": "^5.44.1"
+    "@types/node": "^18.0.0"
   },
   "dependencies": {
     "web-audio-api": "github:audiojs/web-audio-api",

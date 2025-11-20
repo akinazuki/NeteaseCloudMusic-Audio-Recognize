@@ -13,6 +13,16 @@ export async function rawEncode(audioContextData, from, len, channel) {
   return NeteaseUtils.Encode(audioContextData, from, len, channel)
 }
 
+const sharedHeaders = {
+  'accept': '*/*',
+  'accept-language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
+  'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+  'origin': 'chrome-extension://pgphbbekcgpfaekhcbjamjjkegcclhhd',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
+}
+
+const neteaseApiHost = 'https://interface.music.163.com'
+
 export async function lyrics(cid) {
   const urlencoded = new URLSearchParams();
   urlencoded.append("id", cid);
@@ -23,18 +33,12 @@ export async function lyrics(cid) {
 
   const requestOptions = {
     method: "POST",
-    headers: {
-      'accept': '*/*',
-      'accept-language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
-      'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      'origin': 'chrome-extension://pgphbbekcgpfaekhcbjamjjkegcclhhd',
-      'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
-    },
+    headers: sharedHeaders,
     body: urlencoded,
     redirect: "follow"
   };
 
-  return fetch("https://interface.music.163.com/api/song/lyric", requestOptions)
+  return fetch(`${neteaseApiHost}/api/song/lyric`, requestOptions)
     .then((response) => response.json())
 }
 export async function recognize(encoded) {
@@ -47,15 +51,9 @@ export async function recognize(encoded) {
     'decrypt': '1'
   }).toString();
 
-  const res = await fetch('https://interface.music.163.com/api/music/audio/match', {
+  const res = await fetch(`${neteaseApiHost}/api/music/audio/match`, {
     method: 'post',
-    headers: {
-      'accept': '*/*',
-      'accept-language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
-      'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      'origin': 'chrome-extension://pgphbbekcgpfaekhcbjamjjkegcclhhd',
-      'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
-    },
+    headers: sharedHeaders,
     body: querydata
   }).then(res => res.json()).then(function (response) {
     return response.data?.result
